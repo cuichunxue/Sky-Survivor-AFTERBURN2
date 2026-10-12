@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#081923">
+<title>Sky Survivor — AFTERBURN</title><meta name="description" content="海上を駆ける3D戦闘機サバイバル。旋回、加速、フレアを駆使して90秒を生き残ろう。">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<main id="game" aria-label="3D戦闘機サバイバル">
+<canvas id="world" aria-label="戦闘機の飛行画面"></canvas><canvas id="overlay" aria-hidden="true"></canvas><div class="vignette"></div><div id="damage"></div><div id="loadShade"></div><div id="flash"></div>
+<header><a class="brand" href="./" aria-label="Sky Survivor ホーム"><span class="brandmark">✦</span> SKY SURVIVOR <small>FLIGHT DIVISION / 03</small></a><div class="tools"><button id="sound" title="音声の切り替え M" aria-label="音声をオフにする">音 ON</button><button id="camera" title="カメラ切替 C">視点 <span>追尾</span></button><button id="pause" aria-label="一時停止" title="一時停止 P" hidden>Ⅱ</button></div></header>
+<section id="intro" class="screen">
+<div class="introcopy"><p class="eyebrow"><span></span> OPERATION 01 — OPEN WATER</p><h1><span class="t1">AFTER</span><span class="t2">BURN</span><i>空を、切り拓け。</i></h1><p class="brief">海面すれすれの加速。翼を傾ける旋回。<br>迫るミサイルをかわし、90秒を生き抜け。</p><div class="mission"><div><b>90</b><span>秒のサバイバル</span></div><div><b>×4</b><span>最大コンボ倍率</span></div><div><b>S</b><span>ランクを狙え</span></div></div><p id="introBest" hidden></p><div class="audiochoice" role="group" aria-label="出撃時の音"><button id="audioOn" aria-pressed="true">音あり</button><button id="audioOff" aria-pressed="false">音なし</button><span>BGM・エンジン音・接近警報</span></div><button id="start" class="primary" disabled>飛行準備中…</button><p class="controlhint"><span class="mobilehelp">左で操縦 · 右で加速とフレア<br>最初の15秒は安全な練習。</span><span class="desktophelp">WASD / 矢印キー · Shift 加速 · Space フレア · C 視点 · M 音</span></p><p id="loading" role="status">空域を準備しています</p></div>
+<div class="aircraftlabel"><span>YOUR AIRCRAFT</span><b>SF–27 / KESTREL</b><p>双発エンジン · 後退翼 · ツインテール</p><small>架空の機体によるアーケード飛行体験</small></div><div class="introfooter"><span>海上訓練空域 / 夕刻</span><span>HEADPHONES RECOMMENDED</span></div>
+</section>
+<section id="hud" hidden aria-label="飛行計器">
+<div class="hudtop"><div><span class="tiny">MISSION TIME</span><b id="timer">00:00 <em>/ 01:30</em></b><div class="progress"><i id="progress"></i></div></div><div class="hull"><span class="tiny">AIRFRAME</span><b id="health">▰ ▰ ▰</b><small id="score">SCORE 00000</small></div></div>
+<div id="phase"><span>01</span> OPEN WATER <small>まずは翼の感覚をつかもう</small></div>
+<div id="combo"><b id="comboText"></b><i><em id="comboBar"></em></i></div>
+<div id="alert" role="status"></div><div id="threat" role="status" hidden></div><div id="toast" role="status"></div><div id="callouts" aria-live="polite"></div>
+<div id="banner" aria-live="polite"></div><div id="countdown" aria-live="assertive"></div>
+<div class="flightdata left"><span>AIRSPEED</span><b id="speed">680</b><small>KM/H</small></div><div class="flightdata right"><span>ALTITUDE</span><b id="altitude">320</b><small>METERS</small><em id="lowAlt">LOW ALT BONUS</em></div>
+<div id="feelReadout"><span id="powerReadout">MIL POWER</span><span id="bankReadout">BANK 0°</span></div><div id="reticle"><div></div><span>+</span><div></div></div><div id="horizon"><span>− 10 −</span><i></i><span>− 10 −</span></div>
+<div class="bottomdata"><div><span>AFTERBURNER</span><div class="energy"><i id="energy"></i></div></div><canvas id="radar" width="180" height="180" aria-label="接近中のミサイルとリングを表示するレーダー"></canvas></div>
+<div id="stick" aria-label="操縦スティック"><span>操縦</span><i id="knob"></i></div><div class="actions"><button id="flare"><b>フレア</b><span id="flareLabel">フレアで回避</span></button><button id="boost"><b>加速</b><span>長押しで加速</span></button></div>
+<div id="tutorial">左スティックで旋回・上昇。まずは青いリングへ。</div>
+</section>
+<section id="pauseScreen" class="overlay" hidden><div class="panel"><p class="eyebrow">FLIGHT PAUSED</p><h2>ひと息ついて、<br>もう一度空へ。</h2><p>左の丸を動かして操縦<br>右で加速・フレア。視点は右上で切り替え</p><button id="resume" class="primary">飛行を再開</button><button id="motion" class="secondary" aria-pressed="false">揺れ：標準</button><button id="retryPause" class="secondary">最初から飛ぶ</button></div></section>
+<section id="result" class="overlay" hidden><div class="panel"><div class="resulthead"><div><p id="resultTag" class="eyebrow">MISSION COMPLETE</p><h2 id="resultTitle">空を、生き抜いた。</h2></div><div id="rank" aria-label="ランク">S</div></div><p id="newRecord" hidden>NEW RECORD</p><p id="resultText"></p><div class="resultstats"><div><b id="resultTime">90.0</b><span>生存秒数</span></div><div><b id="resultScore">0</b><span>スコア</span></div><div><b id="resultCombo">×0</b><span>最大コンボ</span></div></div><div class="debrief"><p id="achievement"></p><p id="nextGoal"></p></div><p id="best"></p><button id="restart" class="primary">もう一度、飛ぶ ↗</button><p class="retryhint desktophelp">Enter / Space / R でもすぐ再出撃</p><button id="back" class="secondary">機体を見る</button></div></section>
+<section id="error" class="overlay" hidden><div class="panel"><h2>飛行画面を開けませんでした</h2><p id="errorText">ブラウザを更新して、もう一度お試しください。</p><button onclick="location.reload()" class="primary">再読み込み</button></div></section>
+</main><script type="module" src="./game.js"></script><script>window.addEventListener('error',e=>{if(!window.skyReady){document.getElementById('loading').textContent='読み込みに失敗しました。ページを再読み込みしてください。';document.getElementById('error').hidden=false;}});</script>
+</body></html>
